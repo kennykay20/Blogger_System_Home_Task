@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 import * as argon2 from 'argon2';
-import { Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Logger } from '@nestjs/common';
 
 export class Authentication {
   static generateSalt(): string {
@@ -25,7 +25,16 @@ export class Authentication {
       return await argon2.hash(password);
     } catch (error) {
       Logger.error(error, 'Error hashing password:');
-      throw new Error('Failed to hash password');
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: `Failed to hash password`,
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
     }
   };
 
@@ -34,7 +43,16 @@ export class Authentication {
       return await argon2.verify(hash, password);
     } catch (error) {
       Logger.error(error, 'Error verifying password:');
-      throw new Error('Failed to verify password');
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: `Failed to verify password`,
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
     }
   };
 }
