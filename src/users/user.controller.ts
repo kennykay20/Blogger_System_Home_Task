@@ -36,11 +36,13 @@ export class UserController {
     return await this.userSvc.getUserById(+params.id, req);
   }
 
+  @UseGuards(AuthGuard)
   @Put(':id')
   updatePost(@Param('id') id: string, @Body() data: UpdateUserDTO, @Req() req) {
     return this.userSvc.updateUser(+id, data, req);
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   deletePost(@Param('id') id: string, @Req() req) {
     return this.userSvc.deleteUser(+id, req);

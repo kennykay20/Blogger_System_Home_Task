@@ -198,6 +198,7 @@ export class UserService {
         where: { id },
         data,
       });
+      delete result.hashedpassword;
       return { message: 'User updated successfully', result };
     } catch (error) {
       Logger.log(error);
