@@ -18,8 +18,10 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // const jwt = new JwtService();
     const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromCookie(request);
+    let token = this.extractTokenFromCookie(request);
     if (!token) {
+      token = this.extractTokenFromHeader(request);
+    } else {
       throw new UnauthorizedException();
     }
     try {
