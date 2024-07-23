@@ -79,7 +79,6 @@ export class UserService {
 
   async getUsers() {
     try {
-      console.log('inside the get users service');
       const users = await this.prisma.users.findMany({
         select: {
           id: true,
@@ -134,29 +133,8 @@ export class UserService {
 
   async getUserById(id: number, req: Request) {
     try {
-      console.log('request.user ', req.user);
-      console.log('request.headers ', req.headers);
       const decodedUser = req.user as { id: number; username: string };
-      console.log('decode ', decodedUser);
-      const user = await this.prisma.users.findUnique({
-        where: {
-          id,
-        },
-        select: {
-          id: true,
-          email: true,
-          username: true,
-          firstname: true,
-          lastname: true,
-          createdAt: true,
-        },
-      });
-      if (!user) {
-        throw new NotFoundException(`user not found`);
-      }
-      if (user && user.id !== decodedUser.id) {
-        throw new NotFoundException(`not the right login user`);
-      }
+      const user = await this.findUserData(id, decodedUser);
       return user;
     } catch (error) {
       Logger.log(`error fetching user with id ${id}`);
@@ -186,5 +164,28 @@ export class UserService {
       Logger.log(error);
       throw new Error(error);
     }
+  }
+
+  async findUserData(id: number, decodedUser: { id: number }) {
+    const user = await this.prisma.users.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        firstname: true,
+        lastname: true,
+        createdAt: true,
+      },
+    });
+    if (!user) {
+      throw new NotFoundException(`user not found`);
+    }
+    if (user && user.id !== decodedUser.id) {
+      throw new NotFoundException(`not the right login user`);
+    }
+    return user;
   }
 }

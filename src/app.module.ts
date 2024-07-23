@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { configs } from './config';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PrismaModule } from '../prisma/prisma.module';
+// import { AuthGuard } from './guards/auth.guards';
 
 @Module({
   imports: [
