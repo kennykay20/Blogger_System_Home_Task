@@ -13,6 +13,7 @@ import { isValidEmail, isValidPassword } from '../utils/helpers';
 import { Authentication } from '../utils/auth';
 import { Users } from '@prisma/client';
 import { Request } from 'express';
+import { UpdateUserDTO } from './dto/updateUser.dto';
 
 @Injectable()
 export class UserService {
@@ -187,5 +188,52 @@ export class UserService {
       throw new NotFoundException(`not the right login user`);
     }
     return user;
+  }
+
+  async updateUser(id: number, data: UpdateUserDTO, req: Request) {
+    try {
+      const decodedUser = req.user as { id: number; username: string };
+      await this.findUserData(id, decodedUser);
+      const result = await this.prisma.users.update({
+        where: { id },
+        data,
+      });
+      return { message: 'User updated successfully', result };
+    } catch (error) {
+      Logger.log(error);
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: error,
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
+  }
+
+  async deleteUser(id: number, req: Request) {
+    try {
+      const decodedUser = req.user as { id: number; username: string };
+      await this.findUserData(id, decodedUser);
+      const result = await this.prisma.users.delete({
+        where: { id },
+      });
+      return { message: 'User deleted successfully', result };
+    } catch (error) {
+      Logger.log(error);
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: error,
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
   }
 }
