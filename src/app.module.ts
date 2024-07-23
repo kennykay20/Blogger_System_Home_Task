@@ -3,7 +3,7 @@ import { UserModule } from './users/user.module';
 import { PostModule } from './posts/post.module';
 import { AuthModule } from './auth/auth.module';
 import { configs } from './config';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { PrismaModule } from '../prisma/prisma.module';
 // import { AuthGuard } from './guards/auth.guards';
 
@@ -19,6 +19,5 @@ import { PrismaModule } from '../prisma/prisma.module';
       signOptions: { expiresIn: '365d' },
     }),
   ],
-  providers: [JwtService],
 })
 export class AppModule {}
