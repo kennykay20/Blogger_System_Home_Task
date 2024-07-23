@@ -4,9 +4,12 @@ import { configs } from './config';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   app.use(bodyParser.json());
   app.use(cookieParser());

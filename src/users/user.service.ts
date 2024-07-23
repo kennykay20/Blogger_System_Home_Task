@@ -1,8 +1,11 @@
 import {
   BadRequestException,
   ForbiddenException,
+  HttpException,
+  HttpStatus,
   Injectable,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { UserDTO } from './dto/user.dto';
@@ -23,7 +26,7 @@ export class UserService {
       }
       const existUser = await this.getUser(username);
       if (!email) {
-        throw new BadRequestException('Please enter an email');
+        throw new ForbiddenException('Please enter an email');
       }
       if (existUser) {
         throw new BadRequestException('Username already exist');
@@ -61,6 +64,16 @@ export class UserService {
       return { message: 'create user successfully' };
     } catch (error) {
       Logger.log(error);
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: error,
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
     }
   }
 
@@ -80,7 +93,16 @@ export class UserService {
       return users;
     } catch (error) {
       Logger.log(`error fetching users ${error}`);
-      throw new Error(error);
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: error,
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
     }
   }
   async getUser(username: string): Promise<Users> {
@@ -110,9 +132,12 @@ export class UserService {
     }
   }
 
-  async getUserById(id: any, req: Request) {
+  async getUserById(id: number, req: Request) {
     try {
-      const decodedUser = req.user as { id: any; username: string };
+      console.log('request.user ', req.user);
+      console.log('request.headers ', req.headers);
+      const decodedUser = req.user as { id: number; username: string };
+      console.log('decode ', decodedUser);
       const user = await this.prisma.users.findUnique({
         where: {
           id,
@@ -127,15 +152,24 @@ export class UserService {
         },
       });
       if (!user) {
-        throw new ForbiddenException(`user not found`);
+        throw new NotFoundException(`user not found`);
       }
       if (user && user.id !== decodedUser.id) {
-        throw new ForbiddenException();
+        throw new NotFoundException(`not the right login user`);
       }
       return user;
     } catch (error) {
       Logger.log(`error fetching user with id ${id}`);
-      throw new Error(error);
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: error,
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
     }
   }
 

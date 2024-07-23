@@ -10,8 +10,9 @@ import {
 import { UserService } from './user.service';
 import { UserDTO } from './dto/user.dto';
 import { AuthGuard } from '../guards/auth.guards';
+import { JwtAuthGuard } from '../guards/jwt.guards';
 
-@Controller('api/v1/user')
+@Controller('api/v1/users')
 export class UserController {
   constructor(private userSvc: UserService) {}
 
@@ -21,14 +22,14 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('all')
+  @Get()
   async GetUsers() {
-    console.log('inside the getUsers route');
     return await this.userSvc.getUsers();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async GetUser(@Param() params: { id: any }, @Req() req) {
-    return await this.userSvc.getUserById(params.id, req);
+    return await this.userSvc.getUserById(+params.id, req);
   }
 }

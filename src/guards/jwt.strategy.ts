@@ -8,19 +8,20 @@ import { configs } from '../config';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([JwtStrategy.extractJWT]),
       secretOrKey: configs.secret,
+      jwtFromRequest: ExtractJwt.fromExtractors([JwtStrategy.extractJWT]),
     });
   }
 
   private static extractJWT(req: Request): string | null {
-    if (req.cookies && 'blogger_auth' in req.cookies) {
-      return req.cookies.blogger_auth;
+    if (req.cookies && 'blogger_token' in req.cookies) {
+      return req.cookies.blogger_token;
     }
     return null;
   }
 
   async validate(payload: { id: any; username: string }) {
+    console.log('inside the validate method');
     return payload;
   }
 }

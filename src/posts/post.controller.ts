@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { PostService } from './post.service';
 import { PostDTO } from './dto/post.dto';
 
-@Controller('api/v1/post')
+@Controller('api/v1/posts')
 export class PostController {
   constructor(private postSvc: PostService) {}
 
