@@ -37,9 +37,9 @@ $ npm install
 - note: make sure your "DATABASE_URL" details are correct
 ## Generate Prisma Client
 - Generate the Prisma Client to Interact with the database `npx prisma generate`
-- Add a Prisma Service to handle the Prisma Client
+- Add a Prisma Service to handle the Prisma Client.
 ## Prisma Studio
-- Prisma provides a GUI to interact with your database called Prisma Studio. You can start it with: run `npx prisma studio` it will display a localhost open the localhost on your browser 
+- Prisma provides a GUI to interact with your database called Prisma Studio. run `npx prisma studio` it will display a localhost open the localhost on your browser.
 
 
 ## Running the app
