@@ -47,7 +47,9 @@ export class AuthService {
           throw new NotFoundException('Access token not generated');
         }
         res.cookie('blogger_token', accessToken);
-        res.status(200).json({ message: 'login successfully' });
+        res
+          .status(200)
+          .json({ message: 'login successfully', token: accessToken });
       } else {
         throw new BadRequestException('Password not match');
       }
