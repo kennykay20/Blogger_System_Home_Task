@@ -101,6 +101,9 @@ Body
   "lastname": "kayode1"
 }
 
+- Delete a User
+DELETE http://localhost:4600/api/v1/users/:id
+
 
 - Create a Post
 POST http://localhost:4600/api/v1/posts
@@ -125,6 +128,9 @@ Body
   "title": "Updated Post",
   "content": "This is the updated content of the post"
 }
+
+- Delete a post
+DELETE http://localhost:4600/api/v1/posts/:id
 
 
 ### Project Structure
